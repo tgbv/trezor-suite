@@ -19,6 +19,8 @@ jobs:
       - name: Rebase the suite-e branch on develop
         id: rebase
         run: |
+          echo 'Running "git fetch" ...'
+          git fetch
           echo 'Checking out suite-e branch'
           git checkout suite-e
           echo 'Rebasing suite-e to develop'
