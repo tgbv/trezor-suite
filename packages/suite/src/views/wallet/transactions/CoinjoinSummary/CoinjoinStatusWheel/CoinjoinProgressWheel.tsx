@@ -34,7 +34,7 @@ const ProgressIndicator = styled.div`
     top: 11px;
     width: 94px;
     height: 94px;
-    background: conic-gradient(#ffffff00 20deg, #cccccc);
+    background: conic-gradient(#fff0 20deg, #ccc);
     border-radius: 50%;
     font-size: 15px;
     animation: ${animations.DELAYED_SPIN} 2.3s cubic-bezier(0.34, 0.45, 0.17, 0.87) infinite;
@@ -62,7 +62,9 @@ const Wheel = styled.div<{
             theme.STROKE_GREY,
             0.6,
         )} 0)`};
-    transition: background 0.1s, opacity 0.05s;
+    transition:
+        background 0.1s,
+        opacity 0.05s;
     user-select: none;
 
     ${({ isHoverDisabled }) =>

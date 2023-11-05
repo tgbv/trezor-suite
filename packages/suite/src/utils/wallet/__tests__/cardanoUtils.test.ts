@@ -2,24 +2,21 @@ import { CARDANO, PROTO } from '@trezor/connect';
 import { getDerivationType } from '@suite-common/wallet-utils';
 
 import {
-    composeTxPlan,
     getAddressType,
     getDelegationCertificates,
     getNetworkId,
     getProtocolMagic,
     getShortFingerprint,
     getStakePoolForDelegation,
-    getTtl,
     parseAsset,
     getStakingPath,
-    prepareCertificates,
     transformUserOutputs,
-    transformUtxos,
     isCardanoTx,
     isCardanoExternalOutput,
     isPoolOverSaturated,
     formatMaxOutputAmount,
-    getChangeAddressParameters,
+    getUnusedChangeAddress,
+    getAddressParameters,
 } from '../cardanoUtils';
 import * as fixtures from '../__fixtures__/cardanoUtils';
 
@@ -65,51 +62,15 @@ describe('cardano utils', () => {
     // @ts-expect-error params are partial
     expect(isCardanoExternalOutput({ addressParameters: {} }, {})).toBe(false);
 
-    it('composeTxPlan', async () => {
-        expect(
-            await composeTxPlan(
-                'descriptor',
-                [],
-                [
-                    {
-                        type: 0,
-                    },
-                    {
-                        path: 'path',
-                        pool: 'abc',
-                        type: 2,
-                    },
-                ],
-                [{ amount: '10', path: 'path', stakeAddress: 'stkAddr' }],
-                {
-                    address: 'addr',
-                    addressParameters: {
-                        path: 'path',
-                        addressType: 0,
-                        stakingPath: 'stkpath',
-                    },
-                },
-            ),
-        ).toMatchObject({
-            txPlan: undefined,
-            certificates: [
-                {
-                    type: 0,
-                },
-                {
-                    path: 'path',
-                    pool: 'abc',
-                    type: 2,
-                },
-            ],
-            withdrawals: [{ amount: '10', path: 'path', stakeAddress: 'stkAddr' }],
-        });
-    });
-
     fixtures.getChangeAddressParameters.forEach(f => {
         it(`getChangeAddressParameters: ${f.description}`, () => {
-            // @ts-expect-error params are partial
-            expect(getChangeAddressParameters(f.account)).toMatchObject(f.result);
+            const address = getUnusedChangeAddress(f.account);
+            const res = address && {
+                address: address.address,
+                // @ts-expect-error params are partial
+                addressParameters: getAddressParameters(f.account, address.path),
+            };
+            expect(res).toMatchObject(f.result);
         });
     });
 
@@ -133,18 +94,6 @@ describe('cardano utils', () => {
                 // @ts-expect-error params are partial
                 formatMaxOutputAmount(f.maxAmount, f.maxOutput, f.account),
             ).toBe(f.result);
-        });
-    });
-
-    fixtures.transformUtxos.forEach(f => {
-        it(`transformUtxos: ${f.description}`, () => {
-            expect(transformUtxos(f.utxo)).toMatchObject(f.result);
-        });
-    });
-
-    fixtures.prepareCertificates.forEach(f => {
-        it(`prepareCertificates: ${f.description}`, () => {
-            expect(prepareCertificates(f.certificates)).toMatchObject(f.result);
         });
     });
 
@@ -174,9 +123,5 @@ describe('cardano utils', () => {
                 getDelegationCertificates(f.stakingPath, f.poolHex, f.shouldRegister),
             ).toMatchObject(f.result);
         });
-    });
-
-    it(`getTTL`, () => {
-        expect(getTtl(true)).toBe(-13254411);
     });
 });

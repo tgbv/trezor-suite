@@ -38,7 +38,7 @@ const Description = styled.div`
 `;
 
 const StyledImage = styled(props => <Image {...props} />)`
-    margin: 24px 0px;
+    margin: 24px 0;
 `;
 
 const Actions = styled.div`
@@ -131,7 +131,9 @@ export const Exception = ({ exception, discovery }: ExceptionProps) => {
                 <Container
                     title="TR_ACCOUNT_EXCEPTION_AUTH_ERROR"
                     description="TR_ACCOUNT_EXCEPTION_AUTH_ERROR_DESC"
-                    cta={{ action: () => dispatch(authorizeDevice()) }}
+                    cta={{
+                        action: () => dispatch(authorizeDevice()),
+                    }}
                     dataTestBase={exception.type}
                 />
             );

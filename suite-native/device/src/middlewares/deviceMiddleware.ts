@@ -6,11 +6,11 @@ import {
     authorizeDevice,
     deviceActions,
     forgetDisconnectedDevices,
-    handleDeviceConnect,
     handleDeviceDisconnect,
     observeSelectedDevice,
     selectDeviceThunk,
 } from '@suite-common/wallet-core';
+import { selectIsDeviceConnectFeatureFlagEnabled } from '@suite-native/feature-flags';
 
 const isActionDeviceRelated = (action: AnyAction): boolean => {
     if (
@@ -28,13 +28,11 @@ const isActionDeviceRelated = (action: AnyAction): boolean => {
         return true;
     }
 
-    if (Object.values(DEVICE).includes(action.type)) return true;
-
-    return false;
+    return Object.values(DEVICE).includes(action.type);
 };
 
 export const prepareDeviceMiddleware = createMiddlewareWithExtraDeps(
-    (action, { dispatch, next }) => {
+    (action, { dispatch, next, getState }) => {
         if (action.type === DEVICE.DISCONNECT) {
             dispatch(forgetDisconnectedDevices(action.payload));
         }
@@ -52,17 +50,23 @@ export const prepareDeviceMiddleware = createMiddlewareWithExtraDeps(
             deviceActions.selectDevice.match(action) ||
             deviceActions.updateSelectedDevice.match(action)
         ) {
-            dispatch(authorizeDevice());
+            dispatch(authorizeDevice({ isUseEmptyPassphraseForced: true }));
         }
 
         if (deviceActions.forgetDevice.match(action)) {
             dispatch(handleDeviceDisconnect(action.payload));
         }
 
+        const isUsbDeviceConnectFeatureEnabled = selectIsDeviceConnectFeatureFlagEnabled(
+            getState(),
+        );
+
         switch (action.type) {
             case DEVICE.CONNECT:
             case DEVICE.CONNECT_UNACQUIRED:
-                dispatch(handleDeviceConnect(action.payload));
+                if (isUsbDeviceConnectFeatureEnabled) {
+                    dispatch(selectDeviceThunk(action.payload));
+                }
                 break;
             case DEVICE.DISCONNECT:
                 dispatch(handleDeviceDisconnect(action.payload));

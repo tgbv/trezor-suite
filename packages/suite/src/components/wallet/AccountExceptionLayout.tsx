@@ -46,7 +46,7 @@ const Divider = styled.div`
     width: 100%;
     height: 1px;
     background: ${({ theme }) => theme.STROKE_GREY};
-    margin: 30px 0px 36px 0px;
+    margin: 30px 0 36px;
 `;
 
 interface AccountExceptionLayoutProps {
@@ -68,9 +68,7 @@ export const AccountExceptionLayout = (props: AccountExceptionLayoutProps) => (
             <>
                 <Divider />
                 <Actions>
-                    {props.actions?.map(action => (
-                        <ActionButton {...action} />
-                    ))}
+                    {props.actions?.map(action => <ActionButton {...action} />)}
                     {props.actionComponent && props.actionComponent}
                 </Actions>
             </>

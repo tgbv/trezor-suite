@@ -6,6 +6,7 @@ import {
     AccountAddress,
     AccountTransaction,
     AccountUtxo,
+    PrecomposedTransactionFinalCardano,
 } from '@trezor/connect';
 import { arrayDistinct, bufferUtils } from '@trezor/utils';
 import {
@@ -19,7 +20,6 @@ import {
     CoinFiatRates,
     Discovery,
     PrecomposedTransactionFinal,
-    PrecomposedTransactionFinalCardano,
     ReceiveInfo,
     TxFinalCardano,
 } from '@suite-common/wallet-types';
@@ -758,11 +758,10 @@ export const getUtxoFromSignedTransaction = ({
     const findUtxo = (
         // this little func is needed in order to slightly change type inputs array to stop ts complaining
         // not sure how to do this in more elegant way
-        inputs:
-            | (
-                  | PrecomposedTransactionFinalCardano['inputs'][number]
-                  | PrecomposedTransactionFinal['inputs'][number]
-              )[],
+        inputs: (
+            | PrecomposedTransactionFinalCardano['inputs'][number]
+            | PrecomposedTransactionFinal['inputs'][number]
+        )[],
     ) =>
         account.utxo?.filter(
             u =>

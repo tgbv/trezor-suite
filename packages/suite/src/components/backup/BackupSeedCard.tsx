@@ -18,7 +18,9 @@ const Card = styled.div<{ checked: boolean }>`
     padding: 24px;
     border-radius: 10px;
     border: solid 1.5px ${({ theme, checked }) => (checked ? theme.TYPE_GREEN : theme.STROKE_GREY)};
-    transition: box-shadow 0.2s ease-in-out, border 0.2s ease-in-out;
+    transition:
+        box-shadow 0.2s ease-in-out,
+        border 0.2s ease-in-out;
     cursor: pointer;
 
     :hover {
@@ -50,7 +52,7 @@ const Content = styled.div`
     flex: 1;
 
     ${variables.SCREEN_QUERY.BELOW_TABLET} {
-        margin-top: 0px;
+        margin-top: 0;
     }
 `;
 

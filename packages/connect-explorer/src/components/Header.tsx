@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Devices from './Devices';
@@ -17,7 +19,7 @@ const HeaderComponent = styled.header`
 const HeaderPrimary = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 20px 20px;
+    padding: 20px;
 
     @media (min-width: 640px) {
         flex-direction: row;
@@ -28,7 +30,7 @@ const HeaderPrimary = styled.div`
 `;
 
 const Svg = styled.svg`
-    fill: #ffffff;
+    fill: #fff;
     height: 28px;
     width: 100px;
     margin-top: 9px;
@@ -49,7 +51,7 @@ const Title = styled.span`
 `;
 
 const StyledLink = styled(Link)`
-    color: #ffffff;
+    color: #fff;
     text-decoration: underline;
 `;
 
@@ -77,7 +79,6 @@ const Header = () => (
                         </g>
                     </Svg>
                 </a>
-
                 <Title>@trezor/connect</Title>
             </HeaderItemsPrimary>
             <HeaderItemsSecondary>
